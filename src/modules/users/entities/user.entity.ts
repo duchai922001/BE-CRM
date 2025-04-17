@@ -1,4 +1,5 @@
 import { Attendance } from 'src/modules/attendance/entities/attendance.entity';
+import { Tasks } from 'src/modules/tasks/entities/tasks.entity';
 import {
   Column,
   Entity,
@@ -8,6 +9,7 @@ import {
 } from 'typeorm';
 
 // user.entity.ts
+export type UserRole = 'Leader' | 'Staff';
 @Entity()
 @Unique(['email'])
 export class User {
@@ -26,9 +28,18 @@ export class User {
   @Column({ nullable: true })
   avatar: string;
 
+  @Column({
+    type: 'enum',
+    enum: ['Leader', 'Staff'],
+    default: 'Staff',
+  })
+  role: UserRole;
   @Column({ nullable: true })
   phone: string;
 
   @OneToMany(() => Attendance, (attendance) => attendance.user)
   attendances: Attendance[];
+
+  @OneToMany(() => Tasks, (task) => task.assignee)
+  tasks: Tasks[];
 }

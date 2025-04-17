@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { AuthUseCase } from './use-cases/auth-user.usecase';
-import { UserController } from './controllers/user.controller';
 import { TransactionManager } from 'src/database/transaction.manager';
 import { UserRepository } from './repositories/user.repository';
 import { JwtModule } from '@nestjs/jwt';
+import { AuthController } from './controllers/auth.controller';
+import { UserController } from './controllers/user.controller';
+import { UserUseCase } from './use-cases/user.usecase';
 
 @Module({
   imports: [
@@ -15,7 +17,8 @@ import { JwtModule } from '@nestjs/jwt';
       signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [AuthUseCase, TransactionManager, UserRepository],
-  controllers: [UserController],
+  providers: [AuthUseCase, UserUseCase, TransactionManager, UserRepository],
+  controllers: [AuthController, UserController],
+  exports: [UserRepository],
 })
 export class UserModule {}

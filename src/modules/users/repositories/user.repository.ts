@@ -10,7 +10,7 @@ export class UserRepository {
     @InjectRepository(User) private readonly repo: Repository<User>,
   ) {}
 
-  async create(dto: CreateUserDto, manager: EntityManager) {
+  async create(dto: CreateUserDto, manager: EntityManager): Promise<User> {
     const user = manager.create(User, dto);
     return manager.save(user);
   }
@@ -23,5 +23,9 @@ export class UserRepository {
 
   async findAll() {
     return this.repo.find();
+  }
+
+  async findUserByAssign(assigneeId: number): Promise<User | null> {
+    return this.repo.findOneBy({ id: assigneeId });
   }
 }

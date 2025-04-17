@@ -1,18 +1,15 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { AuthUseCase } from '../use-cases/auth-user.usecase';
-import { CreateUserDto } from '../dtos/create-user.dto';
-import { LoginDto } from '../dtos/login.dto';
+import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import { UserUseCase } from '../use-cases/user.usecase';
+import { createResponse } from 'src/common/helpers/response.helper';
 
-@Controller('auth')
+@Controller('users')
 export class UserController {
-  constructor(private readonly authUseCase: AuthUseCase) {}
-  @Post('register')
-  async create(@Body() dto: CreateUserDto) {
-    return this.authUseCase.execute(dto);
-  }
+  constructor(private readonly userUseCase: UserUseCase) {}
 
-  @Post('login')
-  async login(@Body() dto: LoginDto) {
-    return this.authUseCase.login(dto);
+  @Get('get-all')
+  @HttpCode(HttpStatus.OK)
+  async findAll() {
+    const data = await this.userUseCase.findAll();
+    return createResponse(HttpStatus.OK, data, 'Lấy dữ liệu thành công');
   }
 }
